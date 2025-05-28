@@ -28,16 +28,8 @@ public class empacotarService {
 		caixas.add(Arrays.asList(new Integer[]{altura, largura, comprimento}));
 	}
 
-	public void setCaixa(String altura, String largura, String comprimento){
-		caixas.add(Arrays.asList(new Integer[]{Integer.parseInt(altura), Integer.parseInt(largura), Integer.parseInt(comprimento)}));
-	}
-
-	public void addProdutos(Produto produto){
-		produtos.add(produto);
-	}
-
-	/**\/ fins de testes; */
-	public void testeAddCaixas(){
+	/**\/ ; */
+	public void setCaixas(){
 		setCaixa(30, 40, 80);
 		setCaixa(80, 50, 40);
 		setCaixa(50, 80, 60);
@@ -57,9 +49,9 @@ public class empacotarService {
 		produtos.sort(java.util.Comparator.comparing(x -> x.comprimento()));
 	}
 
-	public HashMap<Integer, List<String>> getCaixasProdutos(){
+	public HashMap<Integer, List<String>> getCaixasProdutos(List<Produto> produtos){
 
-		testeAddCaixas();
+		setCaixas();
 		testeAddProdutos();
 
 		HashMap<Integer, List<String>> res = new HashMap<>();
