@@ -16,7 +16,6 @@ public class pacoteController {
 
 		private empacotarService empacotar = new empacotarService();
 
-		/** http://localhost:8080/api/ */
 	    @GetMapping("/")
 	    public String home() {
 	        return "Welcome to the API!";

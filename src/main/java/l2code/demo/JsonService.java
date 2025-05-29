@@ -3,7 +3,6 @@ package l2code.demo;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-// import com.br.entity.Informacoes;
 import com.google.gson.Gson;
 
 import java.io.File;
@@ -14,13 +13,8 @@ public class JsonService {
 	public ListaPedidos getListaPedidos(String jsonFile) {
 		Gson gson = new Gson();
 		try {
-
 			BufferedReader br = new BufferedReader(new FileReader(jsonFile));
-
-			//Converte String JSON para objeto Java
 			ListaPedidos obj = gson.fromJson(br, ListaPedidos.class);
-
-			// System.out.println(obj.pedidos().size());
             return obj;
 
 		} catch (IOException e) {
@@ -34,11 +28,7 @@ public class JsonService {
 		try {
 
 			BufferedReader br = new BufferedReader(new FileReader(jsonFile));
-
-			//Converte String JSON para objeto Java
 			ListaPedidos obj = gson.fromJson(br, ListaPedidos.class);
-
-			// System.out.println(obj.pedidos().size());
             return obj;
 
 		} catch (IOException e) {

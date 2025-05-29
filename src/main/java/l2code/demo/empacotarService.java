@@ -28,12 +28,12 @@ public class empacotarService {
 		setCaixas();
 	}
 
-	public void setCaixa(int altura, int largura, int comprimento){
+	private void setCaixa(int altura, int largura, int comprimento){
 		caixas.add(Arrays.asList(new Integer[]{altura, largura, comprimento}));
 	}
 
 	/**\/ ; */
-	public void setCaixas(){
+	private void setCaixas(){
 		if(caixas.size() < 3){
 			setCaixa(30, 40, 80);
 			setCaixa(80, 50, 40);
@@ -110,7 +110,7 @@ public class empacotarService {
 		return res;
 	}
 
-	public void showMap(HashMap<Integer, List<String>> map){
+	private void showMap(HashMap<Integer, List<String>> map){
 		for (var entry : map.entrySet()) {
     		System.out.println(entry.getKey() + ": " + entry.getValue());
 		}
@@ -137,8 +137,11 @@ public class empacotarService {
 					if(!entry.getValue().isEmpty()){
 						int numCaixa = entry.getKey();
 						List<String> produtos = entry.getValue();
-						caixas.add(new Caixa(nomeCaixas.get(numCaixa), produtos));
+						caixas.add(new Caixa(nomeCaixas.get(numCaixa), produtos, null));
 					}
+				}
+				if(!pedido.produtos().isEmpty() && caixas.isEmpty()){
+					caixas.add(new Caixa("", pedido.produtos().stream().map(e -> e.produto_id()).collect(Collectors.toList()), "Produto não cabe em nenhuma caixa disponível."));
 				}
 				pacotes.add(new Pacote(caixas, pedido.pedido_id()));
 			}
