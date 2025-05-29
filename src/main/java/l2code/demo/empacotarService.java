@@ -1,10 +1,12 @@
 package l2code.demo;
 
-// import com.example.demo.model.Book;
-// import com.example.demo.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,8 +14,7 @@ import java.util.HashMap;
 import java.util.Collections;
 import java.util.stream.Collectors;
 
-// @RestController
-// @RequestMapping("/api")
+
 public class empacotarService {
 
 	/*
@@ -38,14 +39,6 @@ public class empacotarService {
 			setCaixa(80, 50, 40);
 			setCaixa(50, 80, 60);
 		}
-	}
-
-	/**\/ fins de testes; */
-	public void testeAddProdutos(List<Produto> produtos){
-		produtos.add(new Produto("Webcam", new Dimensoes(7, 10, 5)));
-		produtos.add(new Produto("Microfone", new Dimensoes(25, 10, 10)));
-		produtos.add(new Produto("Monitor", new Dimensoes(50, 60, 20)));
-		produtos.add(new Produto("Notebook", new Dimensoes(2, 35, 25)));
 	}
 
 	private void sortMins(List<Produto> produtos){
@@ -121,6 +114,45 @@ public class empacotarService {
 		for (var entry : map.entrySet()) {
     		System.out.println(entry.getKey() + ": " + entry.getValue());
 		}
+	}
+
+	public List<Pacote> processEntrada(MultipartFile file){
+		JsonService json = new JsonService();
+		List<Pacote> pacotes = new ArrayList<>();
+		HashMap<Integer, String> nomeCaixas = new HashMap<>();
+		nomeCaixas.put(1, "Caixa 1");
+		nomeCaixas.put(2, "Caixa 2");
+		nomeCaixas.put(3, "Caixa 3");
+
+		File doc = null;
+		try{
+			doc = convertMultiPartToFile(file);
+			ListaPedidos obj = json.getListaPedidos(doc);
+
+			for(Pedido pedido : obj.pedidos()){
+				HashMap<Integer, List<String>> pacote = getCaixasProdutos(pedido.produtos());
+
+				List<Caixa> caixas = new ArrayList<>();
+				for (var entry : pacote.entrySet()) {
+					if(!entry.getValue().isEmpty()){
+						int numCaixa = entry.getKey();
+						List<String> produtos = entry.getValue();
+						caixas.add(new Caixa(nomeCaixas.get(numCaixa), produtos));
+					}
+				}
+				pacotes.add(new Pacote(caixas, pedido.pedido_id()));
+			}
+		}catch(IOException e){}
+
+		return pacotes;
+	}
+
+	private File convertMultiPartToFile(MultipartFile file ) throws IOException {
+		File convFile = new File( file.getOriginalFilename() );
+		FileOutputStream fos = new FileOutputStream( convFile );
+		fos.write( file.getBytes() );
+		fos.close();
+		return convFile;
 	}
 
 }
