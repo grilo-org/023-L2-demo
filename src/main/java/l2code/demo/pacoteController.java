@@ -15,9 +15,6 @@ import java.util.HashMap;
 public class pacoteController {
 
 		private empacotarService empacotar = new empacotarService();
-	//  @Autowired
-	    // private BookService bookService;
-		// private empacotarService empacotar;
 
 		/** http://localhost:8080/api/ */
 	    @GetMapping("/")
@@ -25,7 +22,7 @@ public class pacoteController {
 	        return "Welcome to the API!";
 	    }
 
-		@GetMapping("/empacotar")
+		@GetMapping("/teste-empacotar")
 	    public String empacotar() {
 
 			empacotarService empacotar = new empacotarService();
@@ -45,17 +42,6 @@ public class pacoteController {
 
 			empacotar.getCaixasProdutos(produtos);
 	        return "Empacotar!";
-	    }
-
-	    @GetMapping("/pedidos")
-	    public String findBookById() {
-			JsonService json = new JsonService();
-	        ListaPedidos obj = json.getListaPedidos("entrada.json");
-
-			// empacotarService empacotar = new empacotarService();
-			// empacotar.getCaixasProdutos(obj.getPedidos());
-
-			return "Pedidos;";
 	    }
 
 		@PostMapping(path = "/pedidos", consumes = { "multipart/form-data" })

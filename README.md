@@ -9,6 +9,8 @@ Teste
 $ gradle bootRun
 ```
 
-## Link para execução
+## Link Swagger: API Documentation
 
-http://localhost:8080/api/empacotar
+```
+http://localhost:8080/swagger-ui/index.html
+```
