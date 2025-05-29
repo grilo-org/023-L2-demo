@@ -36,7 +36,7 @@ public class empacotarService {
 	}
 
 	/**\/ fins de testes; */
-	public void testeAddProdutos(){
+	public void testeAddProdutos(List<Produto> produtos){
 		produtos.add(new Produto("Webcam", 7, 10, 5));
 		produtos.add(new Produto("Microfone", 25, 10, 10));
 		produtos.add(new Produto("Monitor", 50, 60, 20));
@@ -52,11 +52,11 @@ public class empacotarService {
 	public HashMap<Integer, List<String>> getCaixasProdutos(List<Produto> produtos){
 
 		setCaixas();
-		testeAddProdutos();
+		// testeAddProdutos(produtos);
 
 		HashMap<Integer, List<String>> res = new HashMap<>();
 		sortMins(produtos);
-		for(int i =0; i<caixas.size(); i++){
+		for(int i = 0; i<caixas.size(); i++){
 			List<Integer> caixa = caixas.get(i);
 			int altura = caixa.get(0);
 			int largura = caixa.get(1);
@@ -91,25 +91,25 @@ public class empacotarService {
 		int ind_max = 0;
 		int s_con = res.get(caixasNum.get(0)).size();
 		for(int i = 0; i<caixasNum.size(); i++) {
+			var caixa_ant = (i > 0) ? (caixasNum.get(i-1)) : (0);
 			var caixa = caixasNum.get(i);
-			// System.out.println(caixa + " =>" + res.get(caixa));
-			if((i-1) > 0){
-				final int caixa_ant = caixasNum.get(i-1);
-				List<String> differences = res.get(caixa_ant).stream()
-				.filter(element -> !res.get(caixa).contains(element))
+
+			if(caixa_ant > 0){
+				List<String> differences = res.get(caixa).stream()
+				.filter(element -> !res.get(caixa_ant).contains(element))
 				.collect(Collectors.toList());
 				
-				res.put(caixa_ant, differences);
+				res.put(caixa, differences);
 				s_con += differences.size();
 			}
 			if(ind_max == 0 && s_con == produtos.size()){
 				ind_max = i;
 			}
-			if(ind_max > 0 && i >= ind_max){
-				res.remove(caixasNum.get(i));
-			}
 		}
-		// showMap(res);
+		for(int i = ind_max+1; i<caixasNum.size(); i++) {
+			res.remove(caixasNum.get(i));
+		}
+		showMap(res);
 		return res;
 	}
 

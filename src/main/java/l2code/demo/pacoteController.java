@@ -13,11 +13,15 @@ import java.io.IOException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 @RestController
 @RequestMapping("/api")
 public class pacoteController {
-	 @Autowired
+
+		private empacotarService empacotar = new empacotarService();
+	//  @Autowired
 	    // private BookService bookService;
 		// private empacotarService empacotar;
 
@@ -31,7 +35,21 @@ public class pacoteController {
 	    public String empacotar() {
 
 			empacotarService empacotar = new empacotarService();
-			// empacotar.getCaixasProdutos();
+
+			List<Produto> produtos = new ArrayList<>();
+			produtos.add(new Produto("Webcam", 7, 10, 5));
+			produtos.add(new Produto("Microfone", 25, 10, 10));
+			produtos.add(new Produto("Monitor", 50, 60, 20));
+			produtos.add(new Produto("Notebook", 2, 35, 25));
+
+			// produtos.add(new Produto("PS5", 40, 10, 25));
+			// produtos.add(new Produto("Volante", 40, 30, 30));
+
+		// produtos.add(new Produto("Joystick", 15, 20, 10));
+        // produtos.add(new Produto("Fifa 24", 10, 30, 10));
+        // produtos.add(new Produto("Call of Duty", 30, 15, 10));
+
+			empacotar.getCaixasProdutos(produtos);
 	        return "Empacotar!";
 	    }
 
@@ -46,21 +64,36 @@ public class pacoteController {
 			return "Pedidos;";
 	    }
 
-		@PostMapping(path = "/pedidos", consumes = { MediaType.APPLICATION_JSON_VALUE })
+		@PostMapping(path = "/pedidos", consumes = { "multipart/form-data" })
 		@ResponseBody
-		public String processPedidos(@RequestParam(required=false) String file, @RequestPart MultipartFile document) {
+		public List<Pacote> processPedidos(@RequestPart MultipartFile file) {
 			// employeeService.save(employee);
 
 			JsonService json = new JsonService();
 
+			List<Pacote> pacotes = new ArrayList<>();
+
+			HashMap<Integer, String> nomeCaixas = new HashMap<>();
+			nomeCaixas.put(1, "Caixa 1");
+			nomeCaixas.put(2, "Caixa 2");
+			nomeCaixas.put(3, "Caixa 3");
+
 			File doc = null;
 			try{
-				doc = convertMultiPartToFile(document);
+				doc = convertMultiPartToFile(file);
 				ListaPedidos obj = json.getListaPedidos(doc);
+
+				for(Pedido pedido : obj.getPedidos()){
+					HashMap<Integer, List<String>> pacote = empacotar.getCaixasProdutos(pedido.getProdutos());
+
+					for (var entry : pacote.entrySet()) {
+						pacotes.add(new Pacote(nomeCaixas.get(entry.getKey()), entry.getValue(), pedido.getPedidoId()));
+					}
+				}
 				System.out.println(obj.getPedidos().size());
 			}catch(IOException e){}
 
-			return "employee/success";
+			return pacotes;//"employee/success";
 		}
 
 	    // @GetMapping("/findall")
