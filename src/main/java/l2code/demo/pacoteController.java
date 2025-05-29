@@ -87,7 +87,9 @@ public class pacoteController {
 					HashMap<Integer, List<String>> pacote = empacotar.getCaixasProdutos(pedido.produtos());
 
 					for (var entry : pacote.entrySet()) {
-						pacotes.add(new Pacote(nomeCaixas.get(entry.getKey()), entry.getValue(), pedido.pedido_id()));
+						if(!entry.getValue().isEmpty()){
+							pacotes.add(new Pacote(nomeCaixas.get(entry.getKey()), entry.getValue(), pedido.pedido_id()));
+						}
 					}
 				}
 			}catch(IOException e){}

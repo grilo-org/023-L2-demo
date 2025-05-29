@@ -1,6 +1,5 @@
 package l2code.demo;
 
-// import java.util.ArrayList;
 import java.util.List;
 
 public record Pedido (

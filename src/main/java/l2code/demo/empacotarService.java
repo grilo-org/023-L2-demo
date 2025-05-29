@@ -23,15 +23,21 @@ public class empacotarService {
 	*/
 	private List<List<Integer>> caixas = new ArrayList<>();
 
+	public empacotarService(){
+		setCaixas();
+	}
+
 	public void setCaixa(int altura, int largura, int comprimento){
 		caixas.add(Arrays.asList(new Integer[]{altura, largura, comprimento}));
 	}
 
 	/**\/ ; */
 	public void setCaixas(){
-		setCaixa(30, 40, 80);
-		setCaixa(80, 50, 40);
-		setCaixa(50, 80, 60);
+		if(caixas.size() < 3){
+			setCaixa(30, 40, 80);
+			setCaixa(80, 50, 40);
+			setCaixa(50, 80, 60);
+		}
 	}
 
 	/**\/ fins de testes; */
@@ -49,9 +55,6 @@ public class empacotarService {
 	}
 
 	public HashMap<Integer, List<String>> getCaixasProdutos(List<Produto> produtos){
-
-		setCaixas();
-		// testeAddProdutos(produtos);
 
 		HashMap<Integer, List<String>> res = new HashMap<>();
 		sortMins(produtos);
