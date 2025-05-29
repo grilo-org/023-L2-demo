@@ -20,7 +20,7 @@ public class JsonService {
 			//Converte String JSON para objeto Java
 			ListaPedidos obj = gson.fromJson(br, ListaPedidos.class);
 
-			System.out.println(obj.getPedidos().size());
+			// System.out.println(obj.pedidos().size());
             return obj;
 
 		} catch (IOException e) {
@@ -38,7 +38,7 @@ public class JsonService {
 			//Converte String JSON para objeto Java
 			ListaPedidos obj = gson.fromJson(br, ListaPedidos.class);
 
-			System.out.println(obj.getPedidos().size());
+			// System.out.println(obj.pedidos().size());
             return obj;
 
 		} catch (IOException e) {

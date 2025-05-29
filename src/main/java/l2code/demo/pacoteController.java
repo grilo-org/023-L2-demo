@@ -37,17 +37,17 @@ public class pacoteController {
 			empacotarService empacotar = new empacotarService();
 
 			List<Produto> produtos = new ArrayList<>();
-			produtos.add(new Produto("Webcam", 7, 10, 5));
-			produtos.add(new Produto("Microfone", 25, 10, 10));
-			produtos.add(new Produto("Monitor", 50, 60, 20));
-			produtos.add(new Produto("Notebook", 2, 35, 25));
+			produtos.add(new Produto("Webcam", new Dimensoes(7, 10, 5)));
+			produtos.add(new Produto("Microfone", new Dimensoes(25, 10, 10)));
+			produtos.add(new Produto("Monitor", new Dimensoes(50, 60, 20)));
+			produtos.add(new Produto("Notebook", new Dimensoes(2, 35, 25)));
 
-			// produtos.add(new Produto("PS5", 40, 10, 25));
-			// produtos.add(new Produto("Volante", 40, 30, 30));
+			// produtos.add(new Produto("PS5", new Dimensoes(40, 10, 25)));
+			// produtos.add(new Produto("Volante", new Dimensoes(40, 30, 30)));
 
-		// produtos.add(new Produto("Joystick", 15, 20, 10));
-        // produtos.add(new Produto("Fifa 24", 10, 30, 10));
-        // produtos.add(new Produto("Call of Duty", 30, 15, 10));
+		// produtos.add(new Produto("Joystick", new Dimensoes(15, 20, 10)));
+        // produtos.add(new Produto("Fifa 24", new Dimensoes(10, 30, 10)));
+        // produtos.add(new Produto("Call of Duty", new Dimensoes(30, 15, 10)));
 
 			empacotar.getCaixasProdutos(produtos);
 	        return "Empacotar!";
@@ -83,17 +83,16 @@ public class pacoteController {
 				doc = convertMultiPartToFile(file);
 				ListaPedidos obj = json.getListaPedidos(doc);
 
-				for(Pedido pedido : obj.getPedidos()){
-					HashMap<Integer, List<String>> pacote = empacotar.getCaixasProdutos(pedido.getProdutos());
+				for(Pedido pedido : obj.pedidos()){
+					HashMap<Integer, List<String>> pacote = empacotar.getCaixasProdutos(pedido.produtos());
 
 					for (var entry : pacote.entrySet()) {
-						pacotes.add(new Pacote(nomeCaixas.get(entry.getKey()), entry.getValue(), pedido.getPedidoId()));
+						pacotes.add(new Pacote(nomeCaixas.get(entry.getKey()), entry.getValue(), pedido.pedido_id()));
 					}
 				}
-				System.out.println(obj.getPedidos().size());
 			}catch(IOException e){}
 
-			return pacotes;//"employee/success";
+			return pacotes;
 		}
 
 	    // @GetMapping("/findall")

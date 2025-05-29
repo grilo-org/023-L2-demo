@@ -2,17 +2,8 @@ package l2code.demo;
 
 import java.util.List;
 
-public class ListaPedidos {
+public record ListaPedidos (
+	List<Pedido> pedidos
+){
 
-	private List<Pedido> pedidos;
-
-    /* *** */
-
-	public List<Pedido> getPedidos() {
-		return pedidos;
-	}
-
-	public void setPedidos(List<Pedido> pedidos) {
-		this.pedidos = pedidos;
-	}
 }

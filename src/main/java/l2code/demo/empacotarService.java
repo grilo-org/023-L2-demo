@@ -22,7 +22,6 @@ public class empacotarService {
 	Caixa 3: 50 x 80 x 60
 	*/
 	private List<List<Integer>> caixas = new ArrayList<>();
-	private List<Produto> produtos = new ArrayList<>();
 
 	public void setCaixa(int altura, int largura, int comprimento){
 		caixas.add(Arrays.asList(new Integer[]{altura, largura, comprimento}));
@@ -37,16 +36,16 @@ public class empacotarService {
 
 	/**\/ fins de testes; */
 	public void testeAddProdutos(List<Produto> produtos){
-		produtos.add(new Produto("Webcam", 7, 10, 5));
-		produtos.add(new Produto("Microfone", 25, 10, 10));
-		produtos.add(new Produto("Monitor", 50, 60, 20));
-		produtos.add(new Produto("Notebook", 2, 35, 25));
+		produtos.add(new Produto("Webcam", new Dimensoes(7, 10, 5)));
+		produtos.add(new Produto("Microfone", new Dimensoes(25, 10, 10)));
+		produtos.add(new Produto("Monitor", new Dimensoes(50, 60, 20)));
+		produtos.add(new Produto("Notebook", new Dimensoes(2, 35, 25)));
 	}
 
 	private void sortMins(List<Produto> produtos){
-		produtos.sort(java.util.Comparator.comparing(x -> x.altura()));
-		produtos.sort(java.util.Comparator.comparing(x -> x.largura()));
-		produtos.sort(java.util.Comparator.comparing(x -> x.comprimento()));
+		produtos.sort(java.util.Comparator.comparing(x -> x.dimensoes().altura()));
+		produtos.sort(java.util.Comparator.comparing(x -> x.dimensoes().largura()));
+		produtos.sort(java.util.Comparator.comparing(x -> x.dimensoes().comprimento()));
 	}
 
 	public HashMap<Integer, List<String>> getCaixasProdutos(List<Produto> produtos){
@@ -68,17 +67,17 @@ public class empacotarService {
 
 			for(Produto produto: produtos){
 				if(
-					produto.altura() <= altura && s_altura <= altura &&
-					produto.largura() <= largura && s_largura <= largura &&
-					produto.comprimento() <= comprimento && s_comprimento <= comprimento
+					produto.dimensoes().altura() <= altura && s_altura <= altura &&
+					produto.dimensoes().largura() <= largura && s_largura <= largura &&
+					produto.dimensoes().comprimento() <= comprimento && s_comprimento <= comprimento
 				){
-					s_altura += produto.altura();
-					s_largura += produto.largura();
-					s_comprimento += produto.comprimento();
+					s_altura += produto.dimensoes().altura();
+					s_largura += produto.dimensoes().largura();
+					s_comprimento += produto.dimensoes().comprimento();
 
 					List<String> innerlist = res.get(i+1);
 					if(innerlist == null) innerlist = new ArrayList<>();
-					innerlist.add(produto.nome());
+					innerlist.add(produto.produto_id());
 					res.put((i+1), innerlist );
 				}
 			}
@@ -88,28 +87,30 @@ public class empacotarService {
 		Collections.sort(caixasNum, Collections.reverseOrder());
 
 		/** \/ obter diferenças das caixas preenchidas; */
-		int ind_max = 0;
-		int s_con = res.get(caixasNum.get(0)).size();
-		for(int i = 0; i<caixasNum.size(); i++) {
-			var caixa_ant = (i > 0) ? (caixasNum.get(i-1)) : (0);
-			var caixa = caixasNum.get(i);
+		if(caixasNum.size() > 0){
+			int ind_max = 0;
+			int s_con = res.get(caixasNum.get(0)).size();
+			for(int i = 0; i<caixasNum.size(); i++) {
+				var caixa_ant = (i > 0) ? (caixasNum.get(i-1)) : (0);
+				var caixa = caixasNum.get(i);
 
-			if(caixa_ant > 0){
-				List<String> differences = res.get(caixa).stream()
-				.filter(element -> !res.get(caixa_ant).contains(element))
-				.collect(Collectors.toList());
-				
-				res.put(caixa, differences);
-				s_con += differences.size();
+				if(caixa_ant > 0){
+					List<String> differences = res.get(caixa).stream()
+					.filter(element -> !res.get(caixa_ant).contains(element))
+					.collect(Collectors.toList());
+					
+					res.put(caixa, differences);
+					s_con += differences.size();
+				}
+				if(ind_max == 0 && s_con == produtos.size()){
+					ind_max = i;
+				}
 			}
-			if(ind_max == 0 && s_con == produtos.size()){
-				ind_max = i;
+			for(int i = ind_max+1; i<caixasNum.size(); i++) {
+				res.remove(caixasNum.get(i));
 			}
 		}
-		for(int i = ind_max+1; i<caixasNum.size(); i++) {
-			res.remove(caixasNum.get(i));
-		}
-		showMap(res);
+		// showMap(res);
 		return res;
 	}
 
